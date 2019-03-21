@@ -36,12 +36,14 @@ syncFromDisk () {
         fi
         exit 1
     fi
-
+    
+    echo "Copy start"
     if [ "$USE_RSYNC" = true ]; then
         rsync -aXWv --delete --links $HDD_LOG/ $RAM_LOG/ 2>&1 | $LOG_OUTPUT
     else
-        cp -rfup $HDD_LOG/ -T $RAM_LOG/ 2>&1 | $LOG_OUTPUT
+        cp -vrfup $HDD_LOG/ -T $RAM_LOG/ 2>&1 | $LOG_OUTPUT
     fi
+    echo "Copy end"
 }
 
 wait_for () {
@@ -66,18 +68,26 @@ createZramLogDrive () {
 
 case "$1" in
   start)
+      echo "STEP 1"
       [ -d $HDD_LOG/ ] || mkdir $HDD_LOG/
-      mount --bind $RAM_LOG/ $HDD_LOG/
-      mount --make-private $HDD_LOG/
+      echo "STEP 2"
+      mount -v --bind $RAM_LOG/ $HDD_LOG/
+      echo "STEP 3"
+      mount -v --make-private $HDD_LOG/
+      echo "STEP 4"
       wait_for $HDD_LOG
+      echo "STEP 5"
 	if [ "$ZL2R" = true ]; then
 		createZramLogDrive
 		mount -t ext4 -o nosuid,noexec,nodev,user=log2ram /dev/zram${RAM_DEV} ${RAM_LOG}/
 	else
-		mount -t tmpfs -o nosuid,noexec,nodev,mode=0755,size=${SIZE} log2ram $RAM_LOG/
+		mount -v -t tmpfs -o nosuid,noexec,nodev,mode=0755,size=${SIZE} log2ram $RAM_LOG/
+		echo "STEP 6"
 	fi
       wait_for $RAM_LOG
-      syncFromDisk
+      echo "STEP 7"
+      syncFromDisknnnnnnnn
+      echo "STEP 8"
       ;;
 
   stop)
