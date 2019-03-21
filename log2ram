@@ -86,7 +86,7 @@ case "$1" in
 	fi
       wait_for $RAM_LOG
       echo "STEP 7"
-      syncFromDisknnnnnnnn
+      syncFromDisk
       echo "STEP 8"
       ;;
 
