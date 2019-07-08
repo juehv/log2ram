@@ -1,3 +1,6 @@
+# Project to modify Log2Ram for other folders
+Status: try to understand the code.
+
 # Log2Ram
 Like ramlog for systemd (on debian 8 jessie for example).
 
